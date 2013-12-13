@@ -1,0 +1,63 @@
+/************************************default************************************/
+.tls-container.template-default{
+	//.tls-item{width: 100%;}
+	//padding-bottom: 12px;
+	.tls-item-inner{
+		padding: 2.5%;
+		border-left: 15px solid darkgray;
+		background: lightgray;
+		.clearfix;
+		margin: 0 1%;
+	}
+
+	#tls-group-2{
+		line-height: 15px;
+		float: right;
+		text-align: right;
+		.clearfix;
+	}
+	.tls-name,.tls-position, .tls-company{
+		float: right;
+		margin-right: 8px;
+		font-size: 1.1em;
+	}
+	.tls-name{
+		font-size: 1.3em;
+		float: none;
+		text-align: right;
+		line-height: 1.2em;
+		}
+	.tls-post_content{
+		line-height: 1.3em;
+		margin-bottom: 8px;
+		font-size: 1.4em;
+		&:before{
+			content: '\201C';
+			font-size: 6em;
+			color: gray;
+			position: relative;
+			padding: 0 10px 0 10px;
+			top: 32px;
+		}
+	}
+	&.default-c2{
+		.tls-item-inner{
+		}
+		.tls-name{
+			font-size: 1.3em;
+		}
+		.tls-post_content{
+			font-size: 1.2em;
+		}
+	}
+	&.default-c3{
+		.tls-item-inner{
+		}
+		.tls-name{
+			font-size: 1.2em;
+		}
+		.tls-post_content{
+			font-size: 1.1em;
+		}
+	}
+}
