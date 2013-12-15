@@ -1,5 +1,5 @@
 /*
-ver: 0.3
+ver: 0.5
 */
 jQuery(window).load(function(){
 	var ludLoop = function(selectors, options){
@@ -13,7 +13,7 @@ jQuery(window).load(function(){
 		},
 		init: function() {
 			self = this;
-			self.options = $.extend({},self.defaults,self.options);
+			self.options = jQuery.extend({},self.defaults,self.options);
 			//grid
 			(self.options.enable_animation === false) ? self.masonryGrid() : self.fredGrid();
 		},
@@ -78,14 +78,14 @@ jQuery(window).load(function(){
 		itemHeight: function(){
 			if(self.options.equal_height === true) {
 				var itemHeight = Math.max.apply(null, self.selectors.inner.map(function (){
-					return $(this).height();
+					return jQuery(this).height();
 				}).get());
 				self.selectors.inner.css({'min-height' : itemHeight});
 			}
 		}
 	}
 	//local
-	$.fn.ludLoop = function(selectors, options) {
+	jQuery.fn.ludLoop = function(selectors, options) {
 		return new ludLoop(selectors, options).init();
 	};
 });

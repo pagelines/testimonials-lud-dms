@@ -2,7 +2,7 @@
 /*
 	Section: Testimonials Lud
 	Author: bestrag
-	Version: 3.2
+	Version: 3.2.1
 	Author URI: http://bestrag.net
 	Demo: http://bestrag.net/testimonials-lud/demo/
 	Description: Testimonials Lud is going to help users manage everything they need when it comes to testimonials management. It is offering custom templating so literally users can make it as they wish. It comes with several built in templates that can be used anywhere on the page.
@@ -55,24 +55,24 @@ class TestimonialsLud extends PageLinesSection {
 		?>
 		<script type="text/javascript">
 			/* <![CDATA[ */
-			var $ = jQuery
-			,ludOpts 	= {}
-			, ludSelectors	= {};
-			$(document).ready(function(){
+			//var $ = jQuery;
+			var ludOpts 	= {};
+			var ludSelectors	= {};
+			jQuery(document).ready(function(){
 				//selectors
 				var cloneID 		= '<?php echo $this->meta['clone']; ?>';
 				var sectionPrefix	= '<?php echo $this->prefix; ?>';
-				var sectionClone	= $('section#<?php echo $this->section_id; echo $this->meta['clone']; ?>');
+				var sectionClone	= jQuery('section#'+'<?php echo $this->section_id; ?>' + cloneID);
 				ludSelectors[cloneID] = {
 					'sectionPrefix'	: sectionPrefix,
 					'sectionClone'	: sectionClone,
-					'container'	: $('.'+sectionPrefix+'-container', sectionClone),
-					'wraper'		: $('.'+sectionPrefix+'-wraper', sectionClone),
-					'ludItem'	: $('.'+sectionPrefix+'-item', sectionClone),
-					'inner'		: $('.'+sectionPrefix+'-item-inner', sectionClone),
-					'pager' 		: $('.'+sectionPrefix+'-pager', sectionClone),
-					'prev'		: $('.'+sectionPrefix+'-prev', sectionClone),
-					'next'		: $('.'+sectionPrefix+'-next', sectionClone)
+					'container'	: jQuery('.'+sectionPrefix+'-container', sectionClone),
+					'wraper'		: jQuery('.'+sectionPrefix+'-wraper', sectionClone),
+					'ludItem'	: jQuery('.'+sectionPrefix+'-item', sectionClone),
+					'inner'		: jQuery('.'+sectionPrefix+'-item-inner', sectionClone),
+					'pager' 		: jQuery('.'+sectionPrefix+'-pager', sectionClone),
+					'prev'		: jQuery('.'+sectionPrefix+'-prev', sectionClone),
+					'next'		: jQuery('.'+sectionPrefix+'-next', sectionClone)
 				};
 				//get options
 				ludOpts[cloneID]	= <?php echo $lud_opts; ?>;
@@ -105,7 +105,7 @@ class TestimonialsLud extends PageLinesSection {
 					if (400 > calcItemWidth) return ludSelectors[cloneID]['container'].addClass(ludOpts[cloneID]['template_name'] + '-c3');
 				}
 			});
-			$(window).load(function(){
+			jQuery(window).load(function(){
 				cloneID 		= '<?php echo $this->meta['clone']; ?>';
 				//engage
 				ludSelectors[cloneID]['wraper'].ludLoop(ludSelectors[cloneID], ludOpts[cloneID]);
@@ -381,7 +381,6 @@ class TestimonialsLud extends PageLinesSection {
 				)
 			)
 		);
-
 		$opts[] = array(
 			'key'		=> 'trans_settings',
 			'type'		=>  'multi',
@@ -429,7 +428,7 @@ class TestimonialsLud extends PageLinesSection {
 	}
 
 	function section_persistent(){
-		add_action( 'template_redirect',array(&$this, 'testimonials_lud_less') );
+		//add_action( 'template_redirect',array(&$this, 'testimonials_lud_less') );
 		add_filter( 'pl_settings_array', array( &$this, 'get_meta_array' ) );
 		add_filter('pless_vars', array(&$this, 'add_less_vars'));
 		//set post
@@ -450,7 +449,6 @@ class TestimonialsLud extends PageLinesSection {
 
 	/* settings metapanel */
 	function get_meta_array( $settings ){
-
 		$settings[ $this->id ] = array(
 				'name'  => $this->multiple_up.' Lud',
 				//'icon'  => $this->icon,
@@ -546,7 +544,7 @@ class TestimonialsLud extends PageLinesSection {
 		return $vars;
 	}
 
-function post_meta_setup(){
+	function post_meta_setup(){
 		$type_meta_array = array(
 			'settings' => array(
 				'type'         =>  'multi_option',
@@ -573,7 +571,7 @@ function post_meta_setup(){
 					'company_url' => array(
 						'type'       => 'text',
 						'inputlabel' => __( "Company Url", 'pagelines' ),
-				   ),
+					),
 					'img'  => array(
 						'inputlabel' => __( 'Associate an image with this '.$this->single, 'pagelines' ),
 						'type'       => 'thickbox_image'
@@ -594,25 +592,25 @@ function post_meta_setup(){
 		$figo = array(); $findex = 0;
 
 		foreach ($fields as $key => $value) {
-			$figo[$findex] = array( 'name'  => $value['inputlabel'],
-						'id'    => $key,
-						'type'  => $value['type'],
-						'std'   => '',
-						'class' => 'custom-class',
-						'clone' => false);
-						$findex++;
+			$figo[$findex] = array(
+				'name'  => $value['inputlabel'],
+				'id'    => $key,
+				'type'  => $value['type'],
+				'std'   => '',
+				'class' => 'custom-class',
+				'clone' => false);
+			$findex++;
 		}
 		$metabox = array(
-				'id'       => 'personal',
-				'title'    => 'Personal Information',
-				'pages'    => array( $this->multiple ),
-				'context'  => 'normal',
-				'priority' => 'high',
-				'fields' => $figo
-			);
+			'id'       => 'personal',
+			'title'    => 'Personal Information',
+			'pages'    => array( $this->multiple ),
+			'context'  => 'normal',
+			'priority' => 'high',
+			'fields' => $figo
+		);
 		 new RW_Meta_Box($metabox);
 	}
-
 
 	function post_type_setup() {
 		$public_pt = false;
@@ -749,11 +747,12 @@ function post_meta_setup(){
 			break;
 		}
 	}
-
+/*
 	//handle less template
 	function testimonials_lud_less(){
 		$template	= (isset( $this->meta['set']['template_name'])) ? $this->meta['set']['template_name'] : $this->default_template;
 		$template_file 	= sprintf('%s/templates/%s.less', $this->base_dir, $template);
 		pagelines_insert_core_less( $template_file );
 	}
+*/
 }//EOC
