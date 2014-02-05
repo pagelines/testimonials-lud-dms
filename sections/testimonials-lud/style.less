@@ -1,6 +1,3 @@
-/************************************GENERAL************************************/
-//these are default styles for testimonials Lud
-//Highly recomended not to change
 .tls-container {
 	background: @tls-templatebg;
 	position: relative;
@@ -40,16 +37,18 @@ section.section-testimonials-lud{
 		opacity: 0;
 		top: 50%;
 		margin-top: -(@tls-arrowsize/2);
+//		margin-top: -32px;
 		position:absolute;
 		.transition(opacity .3s linear);
 		font-size: @tls-arrowsize;
 		a{color: @tls-arrowtcolor;}
+//		font-size: 62px;
+//		a{color: #333}
 	}
 	.tls-prev{left: 0;}
 	.tls-next{right: 0;}
 	.tls-pager{
 		display: none;
-		//opacity: 0;
 		text-align: center;
 		margin-top: 8px;
 		padding-top: 2px;
@@ -58,10 +57,11 @@ section.section-testimonials-lud{
 			padding: 5px;
 		}
 		a.selected span {background: @tls-pageractivecolor;}
+//		a.selected span {background: orange;}
 		span {
 			border-radius: 30px;
 			background: @tls-pagercolor;
-			//text-indent: -100px;
+//			background: #333;
 			font-size: 0;
 			line-height: 0;
 			display: inline-block;
@@ -71,35 +71,9 @@ section.section-testimonials-lud{
 		}
 	}
 }
-/*****************************options style*****************************/
-form[data-sid="testimonials-lud"], form[data-scope="testimonials-lud"]{
-	.opt{
-		background: #2f2f2f !important;
-		min-height: 280px;
-		&.opt-rest{min-height: 0}
-	}
-	label{
-		.fix;
-		color:white !important;
-		font-size:1em !important;
-		.btn.btn-mini{
-			float:right;
-		}
-	}
-	.opt-name{
-		font-size: 1.3em !important;
-		background: white !important;
-		box-shadow: 0 0 0 !important;
-		color:@blue !important;
-	}
-	select, textarea, input{
-		margin-bottom: 10px;
-	}
-}
 /************************************DEFAULT TEMPLATE************************************/
 /************************************sabrine************************************/
 .tls-container.template-sabrine{
-	//.tls-item{width: 100%;}
 	.tls-item-inner{
 		.clearfix;
 		width: 90%;
@@ -137,9 +111,7 @@ form[data-sid="testimonials-lud"], form[data-scope="testimonials-lud"]{
 		text-transform: uppercase;
 		letter-spacing: 4px;
 		color: brown;
-		//line-height: 1.2;
-		//margin-bottom: 1%;
-	}
+				}
 	.tls-post_title{
 		font-size: 3em;
 		line-height: 1.3;
