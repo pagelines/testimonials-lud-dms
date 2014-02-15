@@ -1,6 +1,5 @@
 /*****************************options style*****************************/
-form[data-sid="testimonials-lud"] .opt.opt-rest, form[data-scope="testimonials-lud"] .opt.opt-rest{min-height: 0}
-form[data-sid="testimonials-lud"] .opt, form[data-scope="testimonials-lud"] .opt{background: #2f2f2f !important; min-height: 280px;}
+form[data-sid="testimonials-lud"] .opt, form[data-scope="testimonials-lud"] .opt{background: #2f2f2f !important; }
 form[data-sid="testimonials-lud"] label, form[data-scope="testimonials-lud"] label{color:white !important; font-size:1em !important;}
 form[data-sid="testimonials-lud"] label .btn.btn-mini, form[data-scope="testimonials-lud"] label .btn.btn-mini {float: right;}
 form[data-sid="testimonials-lud"] .opt-name, form[data-scope="testimonials-lud"] .opt-name{font-size: 1.3em !important; background: white !important; box-shadow: 0 0 0 !important; color:#017EB9 !important;}

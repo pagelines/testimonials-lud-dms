@@ -2,7 +2,7 @@
 /*
 	Section: Testimonials Lud
 	Author: bestrag
-	Version: 3.2.3
+	Version: 3.2.4
 	Author URI: http://bestrag.net
 	Demo: http://bestrag.net/testimonials-lud/demo/
 	Description: Testimonials Lud is going to help users manage everything they need when it comes to testimonials management. It is offering custom templating so literally users can make it as they wish. It comes with several built in templates that can be used anywhere on the page.
@@ -20,6 +20,7 @@ class TestimonialsLud extends PageLinesSection {
 	var $taxID		= 'testimonial-sets';
 	var $section_id		= 'testimonials-lud';
 	var $default_template	= 'sabrine';
+
 
 	/* section_styles */
 	function section_scripts() {
@@ -48,8 +49,13 @@ class TestimonialsLud extends PageLinesSection {
 		$this->lud_opts['use_link']	= false;
 		//layout
 		$this->lud_opts['numslides']	= ( $this->opt( 'col_num' ) )  ? intval($this->opt( 'col_num' )) : 1;
-		$this->lud_opts['slide_gutter']	= ( $this->opt( 'slide_gutter' ) ) ? $this->opt( 'slide_gutter' ).'px' : '0';
+		$this->lud_opts['slide_gutter']	= ( $this->opt( 'slide_gutter' ) ) ? $this->opt( 'slide_gutter' ) : '0';
+		if(is_numeric($this->lud_opts['slide_gutter'])) $this->lud_opts['slide_gutter'] .= 'px';
 		$this->lud_opts['equal_height']		= ( $this->opt( 'equal_height') ) ? false : true ;
+		//carousell single item min width
+		$this->lud_opts['defFredWidth']	= 465;
+		$this->lud_opts['fredWidth']		= 600;
+
 		//all you need is json
 		$lud_opts	= json_encode($this->lud_opts);
 		?>
@@ -67,7 +73,7 @@ class TestimonialsLud extends PageLinesSection {
 					'sectionPrefix'	: sectionPrefix,
 					'sectionClone'	: sectionClone,
 					'container'	: jQuery('.'+sectionPrefix+'-container', sectionClone),
-					'wraper'		: jQuery('.'+sectionPrefix+'-wraper', sectionClone),
+					'wraper'	: jQuery('.'+sectionPrefix+'-wraper', sectionClone),
 					'ludItem'	: jQuery('.'+sectionPrefix+'-item', sectionClone),
 					'inner'		: jQuery('.'+sectionPrefix+'-item-inner', sectionClone),
 					'pager' 		: jQuery('.'+sectionPrefix+'-pager', sectionClone),
@@ -135,7 +141,7 @@ class TestimonialsLud extends PageLinesSection {
 		$template_json  = json_decode($template_json);
 		//query params
 		$slides_num	= ( $this->opt( 'slides_num' ) ) ? $this->opt( 'slides_num' ) : '-1';
-		$orderby	= ( $this->opt( 'orderby' ) ) ? $this->opt( 'orderby' ) : '';
+		$orderby	= ( $this->opt( 'orderby' ) ) ? $this->opt( 'orderby' ) : 'date';
 		$order		= ( $this->opt( 'order' ) ) ? $this->opt( 'order' ) : 'DESC';
 		$params	= array( 'post_type' => $this->multiple, 'orderby' => $orderby, 'order' => $order, 'posts_per_page' => $slides_num );
 		$taxonomy	= ( $this->opt( 'taxonomy' ) ) ? $this->opt( 'taxonomy' ) : null ;
@@ -177,6 +183,7 @@ class TestimonialsLud extends PageLinesSection {
 				$post_data[] = $a;
 				//render elements
 				$all_elems = '';
+				$group_index = 1;
 				foreach ($template_json as $key => $value) {
 					$key++;
 					//template - if array in array
@@ -184,13 +191,18 @@ class TestimonialsLud extends PageLinesSection {
 						$group_elems = '';
 						//elements
 						foreach ($value as $i => $val) {
+							//annoying wp notice fix
+							if(!array_key_exists($val, $post_data[$index])) $post_data[$index][$val][0] = '';
 							$group_elem = sprintf('<div class="%1$s-%2$s">%3$s</div>',$this->prefix, $val, $post_data[$index][$val][0] );
 							$group_elems .= $group_elem;
 						}
 						//wrap elements
-						$group = sprintf('<div id ="%1$s-group-%2$s" class="%1$s-group">%3$s</div>', $this->prefix, $key, $group_elems);
+						$group = sprintf('<div id ="%1$s-group-%2$s" class="%1$s-group">%3$s</div>', $this->prefix, $group_index, $group_elems);
 						$all_elems .= $group;
+						$group_index++;
 					}else{
+						//and again
+						if(!array_key_exists($value, $post_data[$index])) $post_data[$index][$value][0] = '';
 						$elem = sprintf('<div class="%1$s-%2$s">%3$s</div>',$this->prefix, $value, $post_data[$index][$value][0] );
 						$all_elems .= $elem;
 					}
@@ -471,15 +483,15 @@ class TestimonialsLud extends PageLinesSection {
 						'key'           => $this->prefix.'-templatebg',
 						'type'       => 'color',
 						'label' => __( 'Container Background', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> pl_setting('bodybg'),
+						'default'	=> '',
+						//'default'	=> pl_setting('bodybg'),
 					),
 					array(
 						'key'           => $this->prefix.'-singlebg',
 						'type'       => 'color',
 						'label' => __( 'Single '.$this->single_up.' Background', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> pl_setting('bodybg'),
+						'default'	=> '',
+						//'default'	=> pl_setting('bodybg'),
 					),
 					array(
 						'key'           => $this->prefix.'-txtcolor',
@@ -521,7 +533,7 @@ class TestimonialsLud extends PageLinesSection {
 						'type'          => 'text',
 						'label'    => __( 'Arrow size in pixels', 'pagelines' ),
 						//'default'	=> '#',
-						'default'	=> '62',
+						'default'	=> '',
 					),
 					array(
 						'key'           => $this->prefix.'-pagercolor',
@@ -544,13 +556,14 @@ class TestimonialsLud extends PageLinesSection {
 	}
 
 	function add_less_vars($vars){
-		$vars[$this->prefix.'-templatebg']	= ( pl_setting($this->prefix.'-templatebg') )	? pl_hashify( pl_setting( $this->prefix.'-templatebg' ) ) : pl_hashify(pl_setting('bodybg')) ;
-		$vars[$this->prefix.'-singlebg']		= ( pl_setting($this->prefix.'-singlebg') )		? pl_hashify( pl_setting( $this->prefix.'-singlebg' ) ) : pl_hashify(pl_setting('bodybg'));
+		$vars[$this->prefix.'-templatebg']	= ( pl_setting($this->prefix.'-templatebg') )	? pl_hashify( pl_setting( $this->prefix.'-templatebg' ) ) : 'transparent' ;
+		$vars[$this->prefix.'-singlebg']		= ( pl_setting($this->prefix.'-singlebg') )		? pl_hashify( pl_setting( $this->prefix.'-singlebg' ) ) : 'transparent';
 		$vars[$this->prefix.'-txtcolor']		= ( pl_setting($this->prefix.'-txtcolor') )		? pl_hashify( pl_setting( $this->prefix.'-txtcolor' ) ) : pl_hashify(pl_setting('text_primary'));
 		$vars[$this->prefix.'-linkcolor']		= (pl_setting($this->prefix.'-linkcolor'))		? pl_hashify(pl_setting($this->prefix.'-linkcolor')) : pl_hashify(pl_setting('linkcolor'));
 		$vars[$this->prefix.'-othertxtcolor']	= ( pl_setting($this->prefix.'-othertxtcolor') )	? pl_hashify( pl_setting( $this->prefix.'-othertxtcolor' ) ) : pl_hashify(pl_setting('text_primary'));
 		$vars[$this->prefix.'-arrowtcolor']	= (pl_setting($this->prefix.'-arrowtcolor'))	? pl_hashify(pl_setting($this->prefix.'-arrowtcolor')) : '#333';
-		$vars[$this->prefix.'-arrowsize']		= (pl_setting($this->prefix.'-arrowsize'))		? pl_setting($this->prefix.'-arrowsize').'px' : '62px';
+		$vars[$this->prefix.'-arrowsize']	= (pl_setting($this->prefix.'-arrowsize'))		? pl_setting($this->prefix.'-arrowsize') : '62px';
+		if(is_numeric($vars[$this->prefix.'-arrowsize'])) $vars[$this->prefix.'-arrowsize'] .= 'px';
 		$vars[$this->prefix.'-pagercolor']	= (pl_setting($this->prefix.'-pagercolor'))	? pl_hashify(pl_setting($this->prefix.'-pagercolor')) : '#333';
 		$vars[$this->prefix.'-pageractivecolor']	= (pl_setting($this->prefix.'-pageractivecolor'))	? pl_hashify(pl_setting($this->prefix.'-pageractivecolor')) : '#FF7F50';
 		return $vars;
