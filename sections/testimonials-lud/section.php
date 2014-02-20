@@ -2,7 +2,7 @@
 /*
 	Section: Testimonials Lud
 	Author: bestrag
-	Version: 3.2.4
+	Version: 3.2.5
 	Author URI: http://bestrag.net
 	Demo: http://bestrag.net/testimonials-lud/demo/
 	Description: Testimonials Lud is going to help users manage everything they need when it comes to testimonials management. It is offering custom templating so literally users can make it as they wish. It comes with several built in templates that can be used anywhere on the page.
@@ -106,7 +106,7 @@ class TestimonialsLud extends PageLinesSection {
 					ludSelectors[cloneID]['ludItem'].css({
 						'width' :	calcItemWidth
 					});
-					ludOpts[cloneID]['itemWidth'] = calcItemWidth;
+					ludOpts[cloneID]['itemWidth'] = Math.ceil(calcItemWidth);
 					if (400 < calcItemWidth && 600 > calcItemWidth) return ludSelectors[cloneID]['container'].addClass(ludOpts[cloneID]['template_name'] + '-c2');
 					if (400 > calcItemWidth) return ludSelectors[cloneID]['container'].addClass(ludOpts[cloneID]['template_name'] + '-c3');
 				}
