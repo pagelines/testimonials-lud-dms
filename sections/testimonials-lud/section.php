@@ -2,7 +2,7 @@
 /*
 	Section: Testimonials Lud
 	Author: bestrag
-	Version: 3.2.5
+	Version: 3.2.6
 	Author URI: http://bestrag.net
 	Demo: http://bestrag.net/testimonials-lud/demo/
 	Description: Testimonials Lud is going to help users manage everything they need when it comes to testimonials management. It is offering custom templating so literally users can make it as they wish. It comes with several built in templates that can be used anywhere on the page.
@@ -101,12 +101,12 @@ class TestimonialsLud extends PageLinesSection {
 					if(600 > ludSelectors[cloneID]['container'].width()){
 						ludOpts[cloneID]['numslides'] = 1;
 					}
-
-					var calcItemWidth = (ludSelectors[cloneID]['container'].width()/ludOpts[cloneID]['numslides']) - 1;
+					//set single item width
+					var calcItemWidth = Math.floor((ludSelectors[cloneID]['container'].width()/ludOpts[cloneID]['numslides']) );
 					ludSelectors[cloneID]['ludItem'].css({
 						'width' :	calcItemWidth
 					});
-					ludOpts[cloneID]['itemWidth'] = Math.ceil(calcItemWidth);
+					ludOpts[cloneID]['itemWidth'] = calcItemWidth;
 					if (400 < calcItemWidth && 600 > calcItemWidth) return ludSelectors[cloneID]['container'].addClass(ludOpts[cloneID]['template_name'] + '-c2');
 					if (400 > calcItemWidth) return ludSelectors[cloneID]['container'].addClass(ludOpts[cloneID]['template_name'] + '-c3');
 				}
@@ -171,7 +171,7 @@ class TestimonialsLud extends PageLinesSection {
 				$a['post_content'][] = get_the_content( );
 				$a['post_url'][] = get_post_permalink();
 				if(array_key_exists('img', $a) && $a['img'][0]) {
-					$a['img'][0] = (array_key_exists('demo', $a) && $a['demo'][0]) ?  '<img src="'. $a['img'][0] . '">' :  wp_get_attachment_image($a['img'][0]);
+					$a['img'][0] = (array_key_exists('demo', $a) && $a['demo'][0]) ?  '<img src="'. $a['img'][0] . '">' :  wp_get_attachment_image($a['img'][0], 'full');
 				}
 				$a['quotes'][] = ($quotes_img) ? '<img src="'.$quotes_img.'">' : '' ;
 				//add link where needed
@@ -752,13 +752,17 @@ class TestimonialsLud extends PageLinesSection {
 			echo the_excerpt();
 			break;
 		case 'media':
-			 if ( get_post_meta( $post->ID, 'img', true ) ){
-				echo '<img src="'.get_post_meta( $post->ID, 'img', true ).'" style="max-width: 80px; margin: 10px; border: 1px solid #ccc; padding: 5px; background: #fff" />';
+			$is_demo_post = get_post_meta( $post->ID, 'demo', true );
+			$img = get_post_meta( $post->ID, 'img', true );
+			// check if the custom field has a value
+			if( ! empty( $is_demo_post ) ) {
+				if ( $img ) echo '<img src="'.$img.'" style="max-width: 80px; margin: 10px; border: 1px solid #ccc; padding: 5px; background: #fff" />';
 			}
 			else {
-				if ( has_post_thumbnail( $post->ID ) ){ echo get_the_post_thumbnail( $post->ID, array(80,80) ); }
+				if ( $img ) echo wp_get_attachment_image($img, array(80, 80));
 			}
 			break;
+
 		case 'client-company':
 			if ( get_post_meta( $post->ID, 'company', true ) )
 				echo get_post_meta( $post->ID, 'company', true );
