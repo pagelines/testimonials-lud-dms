@@ -2,7 +2,7 @@
 /*
 	Section: Testimonials Lud
 	Author: bestrag
-	Version: 3.2.6
+	Version: 3.3.0
 	Author URI: http://bestrag.net
 	Demo: http://bestrag.net/testimonials-lud/demo/
 	Description: Testimonials Lud is going to help users manage everything they need when it comes to testimonials management. It is offering custom templating so literally users can make it as they wish. It comes with several built in templates that can be used anywhere on the page.
@@ -20,13 +20,56 @@ class TestimonialsLud extends PageLinesSection {
 	var $taxID		= 'testimonial-sets';
 	var $section_id		= 'testimonials-lud';
 	var $default_template	= 'sabrine';
-
+	var $clone		= '';
+	var $ico 		= '';
 
 	/* section_styles */
 	function section_scripts() {
 		wp_enqueue_script( 'jquery-fred', $this->base_url.'/min.caroufredsel.js', array( 'jquery' ), true );
 		wp_enqueue_script( 'jquery-masonry', array( 'jquery' ) );
 		wp_enqueue_script( 'jquery-ludloop', $this->base_url.'/jquery.ludloop.js', array( 'jquery' ), true );
+	}
+
+	function setup_oset($clone){
+		//set/update section_opts colors
+		$this->update_lud_colors();
+
+		//fontAwesome for DMS 2.0
+		global $platform_build;
+		$ver = intval(substr($platform_build, 0, 1));
+		$this->ico = ($ver === 2) ? 'fa' : 'icon';
+	}
+
+	/* clone specific styles */
+	function section_styles(){
+		$colors=array(
+			'templatebg'		=> array('.'.$this->prefix.'-container','#'.$this->opt('templatebg'), 'background-color'),
+			'singlebg'		=> array('.'.$this->prefix.'-item-inner','#'.$this->opt('singlebg'), 'background-color'),
+			'group1bg'		=> array('#'.$this->prefix.'-group-1','#'.$this->opt('group1bg'), 'background-color'),
+			'group2bg'		=> array('#'.$this->prefix.'-group-2','#'.$this->opt('group2bg'), 'background-color'),
+			'title-color'		=> array('.'.$this->prefix.'-post_title','#'.$this->opt('title-color'), 'color'),
+			'content-color'		=> array('.'.$this->prefix.'-post_content','#'.$this->opt('content-color'), 'color'),
+			'linkcolor'		=> array('.'.$this->prefix.'-item-inner a','#'.$this->opt('linkcolor'), 'color'),
+			'custom-color'		=> array('[class*="'.$this->prefix.'-custom"]','#'.$this->opt('custom-color'), 'color'),
+			'meta1-color'		=> array('.'.$this->prefix.'-name','#'.$this->opt('meta-color'), 'color'),
+			'meta2-color'		=> array('.'.$this->prefix.'-position','#'.$this->opt('meta-color'), 'color'),
+			'meta3-color'		=> array('.'.$this->prefix.'-company','#'.$this->opt('meta-color'), 'color'),
+			'arrow_colorL'		=> array('.'.$this->prefix.'-prev a','#'.$this->opt('arrowtcolor'), 'color'),
+			'arrow_colorR'		=> array('.'.$this->prefix.'-next a','#'.$this->opt('arrowtcolor'), 'color'),
+			'arrowsize'		=> array('.'.$this->prefix.'-prev, .'.$this->prefix.'-next', $this->opt('arrowsize').'px', 'font-size'),
+			'pagercolor'		=> array('.'.$this->prefix.'-pager span','#'.$this->opt('pagercolor'), 'background'),
+			'pageractivecolor'	=> array('.'.$this->prefix.'-pager a.selected span','#'.$this->opt('pageractivecolor'), 'background'),
+		);
+		$css_code = '';
+		foreach ($colors as $key => $value) {
+			if($value[1] && $value[1] !== '#' && $value[1] !== 'px' ){
+				$css_code .= sprintf('#%4$s%5$s %1$s{%2$s:%3$s;}', $value[0], $value[2], $value[1], $this->section_id, $this->meta['clone']);
+			}
+		}
+		if ($css_code) {
+			$lud_style = sprintf('<style type="text/css" id="%1$s-custom-%2$s">%3$s</style>', $this->prefix, $this->meta['clone'], $css_code);
+			echo $lud_style;
+		}
 	}
 
 	/* section_head */
@@ -221,13 +264,13 @@ class TestimonialsLud extends PageLinesSection {
 		$controls = ('fredslider' === $animation) ?
 			sprintf(
 				'<span class="%1$s-prev">
-					<a class="%1$s-prev-link" href="#"><i class="icon-chevron-left"></i></a>
+					<a class="%1$s-prev-link" href="#"><i class="%2$s %2$s-chevron-left"></i></a>
 				</span>
 				<span class="%1$s-next">
-					<a class="%1$s-next-link" href="#"><i class="icon-chevron-right"></i></a>
+					<a class="%1$s-next-link" href="#"><i class="%2$s %2$s-chevron-right"></i></a>
 				</span>
 				<div class="%1$s-pager"></div>'
-			, $this->prefix)	: null;
+			, $this->prefix, $this->ico)	: null;
 		//wrap it up
 		$ludloop = sprintf('<div class="%1$s-container post-id-%2$s template-%3$s"><ul class="%1$s-wraper %4$s">%5$s</ul>%6$s</div>',
 			$this->prefix,
@@ -352,22 +395,6 @@ class TestimonialsLud extends PageLinesSection {
 				)
 			)
 		);
-
-		$opts[] = array(
-			'key'		=> 'rest',
-			'type'		=>  'multi',
-			'col'		=> 1,
-			'title'		=> __(  $this->multiple_up.' Dcumentation', 'pagelines' ),
-			'opts' => array(
-				array(
-					'key'		=> $this->prefix.'_docs',
-					'type'		=> 'link',
-					'classes'		=> 'btn-info',
-					'url'		=> 'http://bestrag.net/testimonials-lud/docs',
-					'label'		=> __( 'Docs and Config', 'pagelines' )
-				)
-			)
-		);
 		$opts[] = array(
 			'key'		=> 'control_settings',
 			'type'		=>  'multi',
@@ -427,6 +454,111 @@ class TestimonialsLud extends PageLinesSection {
 				),
 			)
 		);
+
+		$opts[] = array(
+			'key'	=> 'bg_colors',
+			'type' 	=> 	'multi',
+			'col'	=> 1,
+			'title' => __( 'Background Colors', 'pagelines' ),
+			'opts'	=> array(
+				array(
+					'key'           => 'templatebg',
+					'type'       => 'color',
+					'label' => __( 'Container Background', 'pagelines' ),
+					'default'	=> '',
+				),
+				array(
+					'key'           => 'singlebg',
+					'type'       => 'color',
+					'label' => __( 'Single '.$this->single_up.' Background', 'pagelines' ),
+					'default'	=> '',
+				),
+				array(
+					'key'           => 'group1bg',
+					'type'       => 'color',
+					'label' => __( 'Group 1 Background', 'pagelines' ),
+					'default'	=> '',
+				),
+				array(
+					'key'           => 'group2bg',
+					'type'       => 'color',
+					'label' => __( 'Group 2 Background', 'pagelines' ),
+					'default'	=> '',
+				),
+			)
+		);
+
+		$opts[] = array(
+			'key'	=> 'txt-colors',
+			'type' 	=> 	'multi',
+			'col'	=> 2,
+			'title' => __( 'Text Colors', 'pagelines' ),
+			'opts'	=> array(
+				array(
+					'key'           => 'title-color',
+					'type'          => 'color',
+					'label'    => __( 'Title Color', 'pagelines' ),
+					 'default'	=> '',
+				),
+				array(
+					'key'           => 'content-color',
+					'type'          => 'color',
+					'label'    => __( 'Content Color', 'pagelines' ),
+					 'default'	=> '',
+				),
+				array(
+					'key'           => 'meta-color',
+					'type'          => 'color',
+					'label'    => __( 'Meta Color (Name, Position, Company)', 'pagelines' ),
+					 'default'	=> '',
+				),
+				array(
+					'key'           => 'linkcolor',
+					'type'          => 'color',
+					'label'    => __( 'Link Color (Name and Company with Url)', 'pagelines' ),
+					 'default'	=> '',
+				),
+				array(
+					'key'           => 'custom-color',
+					'type'          => 'color',
+					'label'    => __( 'Custom Text Color', 'pagelines' ),
+					 'default'	=> '',
+				)
+			)
+		);
+
+		$opts[] = array(
+			'key'	=> 'controls-colors',
+			'type' 	=> 	'multi',
+			'col'	=> 3,
+			'title' => __( 'Controls Colors and Size', 'pagelines' ),
+			'opts'	=> array(
+				array(
+					'key'           => 'arrowtcolor',
+					'type'          => 'color',
+					'label'    => __( 'Arrow Color', 'pagelines' ),
+					'default'	=> '',
+				),
+				array(
+					'key'           => 'arrowsize',
+					'type'          => 'text',
+					'label'    => __( 'Arrow size in pixels', 'pagelines' ),
+					'default'	=> '',
+				),
+				array(
+					'key'           => 'pagercolor',
+					'type'       => 'color',
+					'label' => __( 'Pager Color', 'pagelines' ),
+					'default'	=> '',
+				),
+				array(
+					'key'           => 'pageractivecolor',
+					'type'       => 'color',
+					'label' => __( 'Pager Active Color', 'pagelines' ),
+					'default'	=> '',
+				)
+			)
+		);
 		return $opts;
 	}
 
@@ -443,9 +575,6 @@ class TestimonialsLud extends PageLinesSection {
 	}
 
 	function section_persistent(){
-		//add_action( 'template_redirect',array(&$this, 'testimonials_lud_less') );
-		add_filter( 'pl_settings_array', array( &$this, 'get_meta_array' ) );
-		add_filter('pless_vars', array(&$this, 'add_less_vars'));
 		//set post
 		$this->post_type_setup();
 		if(!class_exists('RW_Meta_Box')) {
@@ -460,113 +589,6 @@ class TestimonialsLud extends PageLinesSection {
 		   	<p>For the <strong>Testimonials Lud</strong> you need to install the <strong>Meta Box</strong> plugin by <a href="http://www.deluxeblogtips.com/" >Rilwis</a>. It is well tested, <strong>free</strong>, open source solution that will be seamlessly integrated once you install it. <strong>It does not require your attention.</strong>
 		   	You can get it from <a href="http://wordpress.org/plugins/meta-box" target="_blank"><strong>here</strong></a>.</p>
 		</div>';
-	}
-
-	/* settings metapanel */
-	function get_meta_array( $settings ){
-		$settings[ $this->id ] = array(
-				'name'  => $this->multiple_up.' Lud',
-				//'icon'  => $this->icon,
-				'opts'  => $this->sec_site_options()
-		);
-		return $settings;
-	}
-	/* settings metapanel options */
-	function sec_site_options(){
-		$options_array = array(
-			array(
-				'type' 	=> 	'multi',
-				'col'	=> 1,
-				'title' => __( 'Background Colors', 'pagelines' ),
-				'opts'	=> array(
-					array(
-						'key'           => $this->prefix.'-templatebg',
-						'type'       => 'color',
-						'label' => __( 'Container Background', 'pagelines' ),
-						'default'	=> '',
-						//'default'	=> pl_setting('bodybg'),
-					),
-					array(
-						'key'           => $this->prefix.'-singlebg',
-						'type'       => 'color',
-						'label' => __( 'Single '.$this->single_up.' Background', 'pagelines' ),
-						'default'	=> '',
-						//'default'	=> pl_setting('bodybg'),
-					),
-					array(
-						'key'           => $this->prefix.'-txtcolor',
-						'type'          => 'color',
-						'label'    => __( 'Testimonial Text Color', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> pl_setting('text_primary'),
-					),
-					array(
-						'key'           => $this->prefix.'-othertxtcolor',
-						'type'       => 'color',
-						'label' => __( 'Meta Fields Text Color', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> pl_setting('text_primary'),
-					),
-					array(
-						'key'           => $this->prefix.'-linkcolor',
-						'type'       => 'color',
-						'label' => __( 'Name & Company Link Color', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> pl_setting('linkcolor'),
-					)
-				)
-			),
-			array(
-				'type' 	=> 	'multi',
-				'col'	=> 2,
-				'title' => __( 'Controls Colors and Size', 'pagelines' ),
-				'opts'	=> array(
-					array(
-						'key'           => $this->prefix.'-arrowtcolor',
-						'type'          => 'color',
-						'label'    => __( 'Arrow Color', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> '#333',
-					),
-					array(
-						'key'           => $this->prefix.'-arrowsize',
-						'type'          => 'text',
-						'label'    => __( 'Arrow size in pixels', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> '',
-					),
-					array(
-						'key'           => $this->prefix.'-pagercolor',
-						'type'       => 'color',
-						'label' => __( 'Pager Color', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> '#333',
-					),
-					array(
-						'key'           => $this->prefix.'-pageractivecolor',
-						'type'       => 'color',
-						'label' => __( 'Pager Active Color', 'pagelines' ),
-						//'default'	=> '#',
-						'default'	=> '#FF7F50',
-					)
-				),
-			)
-		);
-		return $options_array;
-	}
-
-	function add_less_vars($vars){
-		$vars[$this->prefix.'-templatebg']	= ( pl_setting($this->prefix.'-templatebg') )	? pl_hashify( pl_setting( $this->prefix.'-templatebg' ) ) : 'transparent' ;
-		$vars[$this->prefix.'-singlebg']		= ( pl_setting($this->prefix.'-singlebg') )		? pl_hashify( pl_setting( $this->prefix.'-singlebg' ) ) : 'transparent';
-		$vars[$this->prefix.'-txtcolor']		= ( pl_setting($this->prefix.'-txtcolor') )		? pl_hashify( pl_setting( $this->prefix.'-txtcolor' ) ) : pl_hashify(pl_setting('text_primary'));
-		$vars[$this->prefix.'-linkcolor']		= (pl_setting($this->prefix.'-linkcolor'))		? pl_hashify(pl_setting($this->prefix.'-linkcolor')) : pl_hashify(pl_setting('linkcolor'));
-		$vars[$this->prefix.'-othertxtcolor']	= ( pl_setting($this->prefix.'-othertxtcolor') )	? pl_hashify( pl_setting( $this->prefix.'-othertxtcolor' ) ) : pl_hashify(pl_setting('text_primary'));
-		$vars[$this->prefix.'-arrowtcolor']	= (pl_setting($this->prefix.'-arrowtcolor'))	? pl_hashify(pl_setting($this->prefix.'-arrowtcolor')) : '#333';
-		$vars[$this->prefix.'-arrowsize']	= (pl_setting($this->prefix.'-arrowsize'))		? pl_setting($this->prefix.'-arrowsize') : '62px';
-		if(is_numeric($vars[$this->prefix.'-arrowsize'])) $vars[$this->prefix.'-arrowsize'] .= 'px';
-		$vars[$this->prefix.'-pagercolor']	= (pl_setting($this->prefix.'-pagercolor'))	? pl_hashify(pl_setting($this->prefix.'-pagercolor')) : '#333';
-		$vars[$this->prefix.'-pageractivecolor']	= (pl_setting($this->prefix.'-pageractivecolor'))	? pl_hashify(pl_setting($this->prefix.'-pageractivecolor')) : '#FF7F50';
-		return $vars;
 	}
 
 	function post_meta_setup(){
@@ -644,7 +666,7 @@ class TestimonialsLud extends PageLinesSection {
 			'singular_label' => __( $this->single_up, 'pagelines' ),
 			'description'    => __( 'For creating '.$this->multiple.' items.', 'taxonomies' ),
 			'taxonomies'     => array( $this->taxID ),
-			'menu_icon'      => $this->icon,
+			'menu_icon'      => 'dashicons-format-quote',
 			'public' 			=> $public_pt,
 			'show_ui' 		=> true,
 			'hierarchical' 		=> true,
@@ -776,12 +798,31 @@ class TestimonialsLud extends PageLinesSection {
 			break;
 		}
 	}
-/*
-	//handle less template
-	function testimonials_lud_less(){
-		$template	= (isset( $this->meta['set']['template_name'])) ? $this->meta['set']['template_name'] : $this->default_template;
-		$template_file 	= sprintf('%s/templates/%s.less', $this->base_dir, $template);
-		pagelines_insert_core_less( $template_file );
+
+	//update section specific colors - moved from global to local in ver. 3.3
+	function update_lud_colors(){
+		$global_colors = array('templatebg' => '', 'singlebg' => '', 'txtcolor' => pl_setting('text_primary'), 'linkcolor' => pl_setting('linkcolor'), 'othertxtcolor' => pl_setting('text_primary'), 'arrowtcolor' => '#333', 'pagercolor' => '#333', 'pageractivecolor' => '#FF7F50',  'arrowsize' => '' );
+		$othertxt_color = array('title-color', 'meta-color', 'custom-color');
+		foreach ($global_colors as $key => $value) {
+			$global_color = pl_setting($this->prefix.'-'.$key);
+			if($global_color && $global_color !== $value){
+				if ($key === 'othertxtcolor' ) {
+					foreach ($othertxt_color as $val) {
+						$this->opt_update($val, $global_color, 'local');
+						$this->meta['set'][$val] = $global_color;
+					}
+					pl_setting_update($this->prefix.'-'.$key);
+				}elseif ($key === 'txtcolor') {
+					$this->opt_update('content-color', $global_color, 'local');
+					$this->meta['set']['content-color'] = $global_color;
+					pl_setting_update($this->prefix.'-'.$key);
+				}else {
+					$this->opt_update($key, $global_color, 'local');
+					$this->meta['set'][$key] = $global_color;
+					pl_setting_update($this->prefix.'-'.$key);
+				}
+			}
+		}
 	}
-*/
+
 }//EOC

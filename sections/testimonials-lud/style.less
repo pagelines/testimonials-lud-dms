@@ -1,8 +1,5 @@
 /************************************GENERAL************************************/
-//these are default styles for testimonials Lud
-//Highly recomended not to change
 .tls-container {
-	background: @tls-templatebg;
 	position: relative;
 	height: 120px;
 	overflow: hidden;
@@ -15,12 +12,6 @@
 		display:block;
 		.box-sizing(border-box);
 	}
-	.tls-item-inner{background:@tls-singlebg;}
-	.tls-post_title, .tls-name, .tls-position, .tls-company, .tls-custom_text1, .tls-custom_text2{
-		color: @tls-othertxtcolor;
-		a{color: @tls-linkcolor;}
-	}
-	.tls-post_content{color:@tls-txtcolor;}
 	.fredslider li{width: 33%;}
 	.in-grid{	margin: 0 auto; li{width: 33%;}}
 	.masonry-brick{
@@ -40,14 +31,10 @@ section.section-testimonials-lud{
 		display: none;
 		opacity: 0;
 		top: 50%;
-		margin-top: -(@tls-arrowsize/2);
-//		margin-top: -32px;
 		position:absolute;
 		.transition(opacity .3s linear);
-		font-size: @tls-arrowsize;
-		a{color: @tls-arrowtcolor;}
-//		font-size: 62px;
-//		a{color: #333}
+		font-size: 62px;
+		a{color: #333;}
 	}
 	.tls-prev{left: 0;}
 	.tls-next{right: 0;}
@@ -60,12 +47,14 @@ section.section-testimonials-lud{
 			display: inline-block;
 			padding: 5px;
 		}
-		a.selected span {background: @tls-pageractivecolor;}
-//		a.selected span {background: orange;}
+		a.selected span {
+			background: black;
+			background: #FF7F50;
+		}
 		span {
 			border-radius: 30px;
-			background: @tls-pagercolor;
-//			background: #333;
+			background: orangered;
+			background: #333;
 			font-size: 0;
 			line-height: 0;
 			display: inline-block;
@@ -174,8 +163,6 @@ section.section-testimonials-lud{
 }//sabrine end
 /************************************bigtext************************************/
 .tls-container.template-bigtext{
-	//.tls-item{width: 100%;}
-	//padding-bottom: 12px;
 	.tls-item-inner{
 		width: 80%;
 		padding: 5%;
@@ -183,10 +170,8 @@ section.section-testimonials-lud{
 		.clearfix();
 	}
 	#tls-group-1{
-		//font-size: 0.9em;
 		line-height: 1.2em;
 		text-align: center;
-		//margin-right: 20px;
 		.clearfix;
 	}
 	.tls-name,.tls-position, .tls-company{
@@ -227,8 +212,6 @@ section.section-testimonials-lud{
 }
 /************************************default************************************/
 .tls-container.template-default{
-	//.tls-item{width: 100%;}
-	//padding-bottom: 12px;
 	.tls-item-inner{
 		padding: 2.5%;
 		border-left: 15px solid darkgray;
@@ -258,6 +241,7 @@ section.section-testimonials-lud{
 		line-height: 1.3em;
 		margin-bottom: 8px;
 		font-size: 1.4em;
+		font-style: italic;
 		&:before{
 			content: '\201C';
 			font-size: 6em;
@@ -290,8 +274,6 @@ section.section-testimonials-lud{
 }
 /************************************klot************************************/
 .tls-container.template-klot{
-	//.tls-item{width: 100%;}
-	//padding-bottom: 12px;
 	.tls-item-inner{
 		width: 60%;
 		margin: 0 auto 18px;
@@ -303,7 +285,6 @@ section.section-testimonials-lud{
 		.clearfix();
 	}
 	#tls-group-1{
-		//font-size: 0.9em;
 		line-height: 15px;
 		float: right;
 		text-align: right;
@@ -320,7 +301,6 @@ section.section-testimonials-lud{
 		line-height: 1.5em;
 		}
 	.tls-post_content{
-		color: lighten( @tls-txtcolor, 15%);
 		margin: 0 auto;
 		width: 90%;
 		min-height: 75px;
@@ -362,8 +342,6 @@ section.section-testimonials-lud{
 }//klot end
 /************************************klotimage************************************/
 .tls-container.template-klotimage{
-	//.tls-item{width: 100%;}
-	//padding-bottom: 12px;
 	.tls-item-inner{
 		width: 60%;
 		margin: 0 auto 18px;
@@ -380,11 +358,9 @@ section.section-testimonials-lud{
 		margin-right: 3%;
 	}
 	#tls-group-1{
-		//font-size: 0.9em;
 		line-height: 15px;
 		float: right;
 		text-align: right;
-		//margin-right: 20px;
 		.clearfix;
 	}
 	.tls-name,.tls-position, .tls-company{
@@ -399,9 +375,6 @@ section.section-testimonials-lud{
 		line-height: 1.5em;
 		}
 	.tls-post_content{
-		color: lighten( @tls-txtcolor, 15%);
-		//margin: 0 auto;
-		//width: 90%;
 		min-height: 75px;
 		text-shadow: 1px 1px 1px @grayLighter;
 		text-align: justify;
@@ -437,10 +410,8 @@ section.section-testimonials-lud{
 }
 /************************************metro************************************/
 .tls-container.template-metro{
-	//.tls-item{width: 100%;}
 	.tls-item-inner{
 		.clearfix;
-		//width: 80%;
 		margin: 1% auto;
 	}
 	#tls-group-1{
@@ -554,7 +525,6 @@ section.section-testimonials-lud{
 }//metro end
 /************************************metroimage************************************/
 .tls-container.template-metroimage{
-	//.tls-item{width: 100%;}
 	.tls-item-inner{
 		.clearfix;
 		width: 80%;
@@ -566,7 +536,6 @@ section.section-testimonials-lud{
 		.box-sizing(border-box);
 	}
 	.tls-img{
-		//width: 70%;
 		float:left;
 		margin-right: 2%;
 		width: 18%;
@@ -639,13 +608,10 @@ section.section-testimonials-lud{
 }//metroimage end
 /************************************simple************************************/
 .tls-container.template-simple{
-	//.tls-item{width: 100%;}
-	//padding-bottom: 12px;
 	.tls-item-inner{
 		width: 60%;
 		padding: 2.3% 1.5%;
 		margin: 0 auto;
-		//min-height: 130px;
 		.clearfix();
 	}
 	.tls-quotes{
@@ -655,11 +621,9 @@ section.section-testimonials-lud{
 		margin-right: 3%;
 	}
 	#tls-group-1{
-		//font-size: 0.9em;
 		line-height: 15px;
 		float: right;
 		text-align: right;
-		//margin-right: 20px;
 		.clearfix;
 	}
 	.tls-name,.tls-position, .tls-company{
@@ -667,47 +631,39 @@ section.section-testimonials-lud{
 		margin-right: 8px;
 	}
 	.tls-name{
-		//text-shadow: 1px 1px 1px @grayLighter;
+		text-shadow: 1px 1px 1px @grayLighter;
 		font-size: 1.5em;
 		float: none;
 		text-align: right;
 		line-height: 1.5em;
 		}
 	.tls-post_content{
-		//color: lighten( @tls-txtcolor, 15%);
-		//margin: 0 auto;
-		//width: 90%;
-		//min-height: 75px;
-		//text-shadow: 1px 1px 1px @grayLighter;
+		text-shadow: 1px 1px 1px @grayLighter;
 		text-align: justify;
 		line-height: 1.3em;
-		//font-style: italic;
+		font-style: italic;
 		margin-bottom: 8px;
 	}
 	&.simple-c2{
 		.tls-item-inner{
 			width: 90%;
-		//	min-height: 100px;
 		}
 		.tls-name{
 			font-size: 1.3em;
 		}
 		.tls-post_content{
-		//	min-height: 45px;
 		}
 	}
 	&.simple-c3{
 		.tls-item-inner{
 			width: 90%;
-		//	min-height: 100px;
 		}
 		.tls-name{
 			font-size: 1.1em;
 			font-weight: bold;
 		}
 		.tls-post_content{
-		//	min-height: 45px;
 		}
 	}
-	
+
 }
